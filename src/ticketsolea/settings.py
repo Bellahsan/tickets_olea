@@ -49,6 +49,9 @@ ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
+    #
+    'admin_soft.apps.AdminSoftDashboardConfig',
+    #
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -72,7 +75,10 @@ ROOT_URLCONF = 'ticketsolea.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        #   'DIRS': [],
+        'DIRS': [
+            BASE_DIR / "website/templates",
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -147,7 +153,27 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+#
+# STATICFILES_DIRS = [
+#     BASE_DIR / "ticketsolea/static",
+# ]
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#
+LOGIN_REDIRECT_URL = '/'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
+#
+AUTH_USER_MODEL = 'website.User'
+
+
+#
+ADMIN_SOFT_DASHBOARD = {
+    'CUSTOM_ADMIN_TITLE': 'TICKETS OLEA',
+    'USE_CUSTOM_ADMIN': True,
+}
