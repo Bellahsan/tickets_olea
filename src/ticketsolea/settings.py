@@ -29,6 +29,7 @@ environ.Env.read_env(env_file=str(BASE_DIR / "ticketsolea" / ".env"))
 #   SECRET_KEY = 'django-insecure-=gdpidf&l4a!nnyz7a#i+tqkgwqydu-ymir10-z!!pgg*t=5+@'
 SECRET_KEY = env("SECRET_KEY")
 
+
 # SECURITY WARNING: don't run with debug turned on in production!
 #   DEBUG = True
 DEBUG = env.bool('DEBUG', False)
