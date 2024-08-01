@@ -1,0 +1,45 @@
+{% extends "admin/base_site.html" %}
+{% block extrastyle %} {% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="callout">
+        <h5>Bienvenue</h5>
+        <div class="row invoice-info">
+            <div class="col-sm-3 invoice-col">
+                <strong>{{ request.user }}</strong><br>
+                <span class="text-bold"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="callout" style="padding:50px 0px;border:0px;display:none;">
+        <div class="row" style="padding:50px 0px;border:0px;">
+            <div class="col-sm-12">
+                <form method="get">
+                    <div class="row">
+                        <div class="col-12 col-md-12 col-sm-12 row">
+                            <div class="col-md-2">
+                                &nbsp;
+                            </div>
+                            <div class="col-md-8">
+                                <div class="col-sm-12">
+                                    <input id="search_all" class="form-control" type="text" name="search" style="border-radius:3px;border:1px solid #ddd;var(--colorPrimary);text-transform:uppercase;">
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="col-sm-12 text-right">
+                                    <button type="submit" class="btn btn-complement-rouge">Rechercher</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extrajs %}
+{% endblock %}
+{% endblock %}

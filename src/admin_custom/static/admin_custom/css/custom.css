@@ -1,0 +1,92 @@
+
+
+/****** SIDEBAR CSS ******/
+
+[class*=sidebar-dark-] .nav-sidebar>.nav-item>.nav-treeview {
+    background-color: #ededed !important;
+}
+
+[class*=sidebar-dark-] .nav-treeview>.nav-item>.nav-link:focus, [class*=sidebar-dark-] .nav-treeview>.nav-item>.nav-link:hover {
+    /* background: linear-gradient(45deg, #C11B0E, #BB4127) !important; */
+    background-image: linear-gradient(to left bottom, #b7482b, #ca612e, #dc7a31, #eb9435, #f8af3c) !important;
+    color: #ffffff !important;
+}
+
+[class*=sidebar-dark-] .nav-treeview>.nav-item>.nav-link {
+    color: #000 !important;
+}
+
+[class*=sidebar-dark-] .nav-treeview>.nav-item>.nav-link.active, [class*=sidebar-dark-] .nav-treeview>.nav-item>.nav-link.active:focus, [class*=sidebar-dark-] .nav-treeview>.nav-item>.nav-link.active:hover {
+    /* background: linear-gradient(45deg, #C11B0E, #BB4127) !important; */
+    background-image: linear-gradient(to left bottom, #b7482b, #ca612e, #dc7a31, #eb9435, #f8af3c) !important;
+    color: #ffffff !important;
+}
+
+
+.sidebar-dark-primary .nav-sidebar>.nav-item>.nav-link.active, .sidebar-light-primary .nav-sidebar>.nav-item>.nav-link.active {
+    /* background: linear-gradient(45deg, #C11B0E, #BB4127); */
+    background-image: linear-gradient(to left bottom, #b7482b, #ca612e, #dc7a31, #eb9435, #f8af3c);
+    color: #fff !important;
+    box-shadow: 3px 3px 20px 0 rgb(123 31 162 / 50%);
+}
+
+[class*=sidebar-dark-] {
+    background-color: #ffffff;
+}
+
+[class*=sidebar-dark-] .sidebar a {
+    color: #454545;
+}
+
+[class*=sidebar-dark-] .nav-header {
+    background-color: inherit;
+    color: #8e8e8e;
+}
+
+[class*=sidebar-dark-] .nav-sidebar>.nav-item.menu-open>.nav-link, [class*=sidebar-dark-] .nav-sidebar>.nav-item:hover>.nav-link, [class*=sidebar-dark-] .nav-sidebar>.nav-item>.nav-link:focus {
+    background-color: rgb(84 82 82 / 10%);
+    color: #454545;
+}
+
+
+img.custom-logo.brand-image {
+    box-shadow: none !important;
+    margin-left: 0px;
+}
+
+.accent-primary [class*=sidebar-dark-] .sidebar a:not(.dropdown-item):not(.btn-app):not(.nav-link):not(.brand-link) {
+    color: #454545;
+}
+
+.user-profile {
+    font-size: 2.4em;
+    color: #d9d9d9;
+}
+
+.accent-primary [class*=sidebar-dark-] .sidebar a:not(.dropdown-item):not(.btn-app):not(.nav-link):not(.brand-link):hover {
+    color: #4545457d;
+}
+
+[class*=sidebar-dark] .user-panel {
+    border-bottom: 1px solid #CCC;
+}
+
+[class*=sidebar-dark] .brand-link {
+    border-bottom: 1px solid #ccc;
+}
+
+/****** SIDEBAR CSS END ******/
+
+/****** TOP BAR CSS ******/
+
+.navbar-white {
+    /* background: linear-gradient(45deg, #868686, #868686); */
+    background-image: linear-gradient(to left bottom, #b7482b, #ca612e, #dc7a31, #eb9435, #f8af3c);
+    color: #fff;
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: rgb(255 255 255);
+}
+
+/****** TOP BAR CSS END ******/

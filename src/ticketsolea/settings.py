@@ -10,48 +10,37 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
-##
-import environ
 import os
-##
+import environ
 from pathlib import Path
+from django.utils.translation import gettext_lazy as _
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-##
 env = environ.Env()
 environ.Env.read_env(env_file=str(BASE_DIR / "ticketsolea" / ".env"))
-##
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 #   SECRET_KEY = 'django-insecure-=gdpidf&l4a!nnyz7a#i+tqkgwqydu-ymir10-z!!pgg*t=5+@'
-##
 SECRET_KEY = env("SECRET_KEY")
-##
 
 # SECURITY WARNING: don't run with debug turned on in production!
 #   DEBUG = True
-##
 DEBUG = env.bool('DEBUG', False)
-##
 
 #   ALLOWED_HOSTS = []
-##
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
-##
 
 # Application definition
-
 INSTALLED_APPS = [
+    'jazzmin',
+    'admin_custom',
     'django.contrib.admin',
-    #
-    'admin_soft.apps.AdminSoftDashboardConfig',
-    #
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -75,10 +64,7 @@ ROOT_URLCONF = 'ticketsolea.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        #   'DIRS': [],
-        'DIRS': [
-            BASE_DIR / "website/templates",
-        ],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -93,18 +79,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ticketsolea.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
-##
+# CUSTOM DATABASE CONFIGURATION
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -115,7 +90,6 @@ DATABASES = {
         'PORT': env('DATABASE_PORT'),
     }
 }
-##
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -135,7 +109,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
@@ -147,29 +120,105 @@ USE_I18N = True
 
 USE_TZ = True
 
+# Provide a lists of languages which your site supports.
+LANGUAGE = (
+    ('fr', _('Français')),
+    ('en', _('English')),
+)
+
+PAGE_LANGUAGES = "PAGE_LANGUAGES"
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_URL = 'static/'
-#   STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = '/static/'
+
+MEDIA_URL = '/media/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-#
+AUTH_USER_MODEL = 'website.User'
+
+# LOGIN DEFAULT REDIRECT URL
 LOGIN_REDIRECT_URL = '/'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-
-#
-AUTH_USER_MODEL = 'website.User'
-
-
-#
-ADMIN_SOFT_DASHBOARD = {
-    'CUSTOM_ADMIN_TITLE': 'TICKETS OLEA',
-    'USE_CUSTOM_ADMIN': True,
+# DJANGO JAZZMIN CONFIGURATION
+JAZZMIN_SETTINGS = {
+    "site_title": "",
+    "site_header": "Tickets OLEA",
+    "site_brand": "©",
+    "site_logo": "admin_custom/img/logo.png",
+    "site_logo_classes": "container",
+    "custom_css": "admin_custom/css/custom.css",
+    "order_with_respect_to": [
+        'auth',
+        'website',
+    ],
+    "related_modal_active": True,
+    "navigation_expanded": True,
+    "copyright": "TICKETS OLEA",
+    "version": "1.0",
+    "language_chooser": True,
+    "PAGE_LANGUAGES": LANGUAGE,
+    "custom_links": {
+        "auth": [
+            {
+                "name": "Utilisateurs",
+                "url": "admin:website_user_changelist",
+                "icon": "fa fa-user",
+                "permissions": ["auth.view_user"]
+            }
+        ],
+        "website": [
+            {
+                "name": "Tableau de Bord",
+                "url": "index",
+                "icon": "fas fa-home",
+            },
+            {
+                "name": "Tickets",
+                "url": "tickets",
+                "icon": "fas fa-ticket-alt",
+                "permissions": ["website.can_view_tickets"]
+            },
+            {
+                "name": "Types Tickets",
+                "url": "types",
+                "icon": "fa fa-credit-card",
+                "permissions": ["website.can_view_types_tickets"]
+            },
+        ],
+    },
+    "hide_models": [
+        'website.ticket',
+        'website.typeticket',
+        'website.user',
+    ],
+    "icons": {
+        "auth": "fas fa-user-shield",
+        "auth.Group": "fas fa-users",
+        "website": "fas fa-box",
+    },
+    "change_view": {
+        "auth": {
+            "user": {
+                "password": "Change Password",
+            }
+        }
+    },
+    "default_icon_parents": "fas fa-chevron-circle-right",
+    "default_icon_children": "fas fa-circle",
 }
+
+# EMAIL SETTINGS
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = ''
+EMAIL_PORT = 587
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+EMAIL_USE_TLS = True
+EMAIL_HOST_NAME = 'Noreply TICKETS OLEA'

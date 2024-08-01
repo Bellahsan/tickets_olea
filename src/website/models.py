@@ -1,6 +1,3 @@
-
-# Create your models here.
-
 from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.db import models
 from shared.enum import RoleUtilisateur, StatutTicket
@@ -8,16 +5,9 @@ from shared.enum import RoleUtilisateur, StatutTicket
 from ticketsolea import settings
 
 
-class AuthGroup(Group):
-    #
-    libelle = models.CharField(max_length=150)
-    code = models.CharField(max_length=50)
-
-
 class User(AbstractUser):
-    #
     role = models.CharField(max_length=50, choices=RoleUtilisateur.choices, default=RoleUtilisateur.ADMIN)
-    groups = models.ManyToManyField(AuthGroup, related_name='website_users', blank=True, verbose_name='groups')
+    groups = models.ManyToManyField(Group, related_name='website_users', blank=True, verbose_name='groups')
     user_permissions = models.ManyToManyField(Permission, related_name='website_users_permissions', blank=True, verbose_name='user permissions')
 
     def is_admin(self):
@@ -43,9 +33,8 @@ class User(AbstractUser):
 
 
 class TypeTicket(models.Model):
-    #
     libelle = models.CharField(max_length=50, blank=True, null=True)
-    code = models.CharField(max_length=50, blank=True, null=True)
+    code = models.CharField(max_length=50, blank=True, null=True, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -59,22 +48,16 @@ class TypeTicket(models.Model):
 
 
 class Ticket(models.Model):
-    #
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='created_tickets') # user qui cée la ticket
-    code = models.CharField(max_length=10, unique=True) # code unique
-    #
-    type_ticket = models.ForeignKey(TypeTicket, on_delete=models.CASCADE, null=True, blank=True) # clé étranger vers model TypeTicket
-    #
-    title = models.CharField(max_length=200) # titre général
-    description = models.TextField() # description
-    attachments = models.FileField(upload_to='attachments/', blank=True, null=True) # attachements (image, fichier ect...)
-    traite_par = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, related_name='tickets_traites', null=True, blank=True) # user qui traite la ticket
-    status = models.CharField(max_length=50, choices=StatutTicket.choices, default=StatutTicket.ENATTENTE) # état de la ticket
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='created_tickets')
+    code = models.CharField(max_length=10, unique=True)
+    type_ticket = models.ForeignKey(TypeTicket, on_delete=models.CASCADE, null=True, blank=True, related_name='tickets')
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    attachments = models.FileField(upload_to='attachments/', blank=True, null=True)
+    traite_par = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, related_name='tickets_traites', null=True, blank=True)
+    status = models.CharField(max_length=50, choices=StatutTicket.choices, default=StatutTicket.ENATTENTE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.code
