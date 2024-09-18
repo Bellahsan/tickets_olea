@@ -1,0 +1,376 @@
+{% extends "admin/base_site.html" %}
+{%load static%}
+{%block extrastyle%}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+<style>
+    #our-mission {
+        padding: 20px;
+        background-color: #f4f4f4;
+    }
+    
+    .mission-container {
+        display: flex;
+        justify-content: space-around; /* Espace entre les colonnes */
+        flex-wrap: wrap; /* Pour gérer les petits écrans */
+    }
+    
+    .mission-column {
+        flex: 1; /* Chaque colonne prend une largeur égale */
+        margin: 0px 0px 70px 100px; /* Marge autour des colonnes */
+        padding: 20px;
+        background-color: #ffffff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        max-width: 300px; /* Limite la largeur des colonnes */
+        text-align: center; /* Centre le texte et les images */
+    }
+    
+    .mission-icon {
+        width: 200px; /* Ajustez la taille selon vos besoins */
+        height: 200px; /* Ajustez la taille selon vos besoins */
+        margin-bottom: 40px; /* Espace entre l'icône et le texte */
+    }
+    
+    .mission-column h3 {
+        margin-top: 0;
+        color: #333;
+    }
+    
+    .mission-column p {
+        color: #666;
+    }
+
+
+    #meet-the-team {
+        padding: 20px;
+        background-color: #f9f9f9;
+    }
+    .team-container {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+    }
+    .team-card {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        overflow: hidden;
+        width: 300px;
+        margin: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .card-header {
+        background-color: #f4f4f4;
+        padding: 15px;
+        text-align: center;
+    }
+    .team-photo {
+        border-radius: 50%;
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        margin-bottom: 10px;
+    }
+    .card-body {
+        padding: 15px;
+    }
+    .card-footer {
+        background-color: #f4f4f4;
+        padding: 10px;
+        text-align: center;
+    }
+    .card-footer a {
+        margin: 0 5px;
+        color: #007bff;
+        text-decoration: none;
+    }
+    .card-footer a:hover {
+        text-decoration: underline;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #f0f0f0;
+    }
+    
+
+    .slide-container{
+        max-width: 1120px;
+        width: 100%;
+        padding: 40px 0;
+      }
+      .slide-content{
+        margin: 0 40px;
+        overflow: hidden;
+        border-radius: 25px;
+      }
+      .card{
+        border-radius: 25px;
+        background-color: #FFF;
+      }
+      .image-content,
+      .card-content{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 10px 14px;
+      }
+      .image-content{
+        position: relative;
+        row-gap: 5px;
+        padding: 25px 0;
+      }
+      .overlay{
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 100%;
+        background-color: #4070F4;
+        border-radius: 25px 25px 0 25px;
+      }
+      .overlay::before,
+      .overlay::after{
+        content: '';
+        position: absolute;
+        right: 0;
+        bottom: -40px;
+        height: 40px;
+        width: 40px;
+        background-color: #4070F4;
+      }
+      .overlay::after{
+        border-radius: 0 25px 0 0;
+        background-color: #FFF;
+      }
+      .card-image{
+        position: relative;
+        height: 150px;
+        width: 150px;
+        border-radius: 50%;
+        background: #FFF;
+        padding: 3px;
+      }
+      .card-image .card-img{
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 4px solid #4070F4;
+      }
+      .name{
+        font-size: 18px;
+        font-weight: 500;
+        color: #333;
+      }
+      .description{
+        font-size: 14px;
+        color: #707070;
+        text-align: center;
+      }
+      .button{
+        border: none;
+        font-size: 16px;
+        color: #FFF;
+        padding: 8px 16px;
+        background-color: #4070F4;
+        border-radius: 6px;
+        margin: 14px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      .button:hover{
+        background: #265DF2;
+      }
+      .swiper-navBtn{
+        color: #6E93f7;
+        transition: color 0.3s ease;
+      }
+      .swiper-navBtn:hover{
+        color: #4070F4;
+      }
+      .swiper-navBtn::before,
+      .swiper-navBtn::after{
+        font-size: 35px;
+      }
+      .swiper-button-next{
+        right: 0;
+      }
+      .swiper-button-prev{
+        left: 0;
+      }
+      .swiper-pagination-bullet{
+        background-color: #6E93f7;
+        opacity: 1;
+      }
+      .swiper-pagination-bullet-active{
+        background-color: #4070F4;
+      }
+      @media screen and (max-width: 768px) {
+        .slide-content{
+          margin: 0 10px;
+        }
+        .swiper-navBtn{
+          display: none;
+        }
+      }
+      .social-icons {
+        margin-top: 10px; /* Espace entre le bouton et l'icône */
+    }
+    
+    .social-icons a {
+        color: #0077b5; /* Couleur bleue de LinkedIn */
+        font-size: 36px; /* Taille de l'icône, ajustez selon vos préférences */
+        text-decoration: none;
+    }
+    
+    .social-icons a:hover {
+        color: #005582; /* Couleur plus sombre au survol */
+    }
+    
+    
+</style>
+{%endblock%}
+
+{% block content %}
+
+<div style="text-align: center; margin-top: 20px;">
+    <a href="{% url 'index' %}">
+        <button style="padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">
+            Return to Menu
+        </button>
+    </a>
+</div>
+
+
+
+<section id="about-introduction">
+    <h1>Welcome to the IT Department of <a href="https://www.olea.africa/" style="text-decoration:underline;color: #333";>Olea</a></h1>
+  
+        <p> At Olea, we are an integral part of the reassurance industry, dedicated to ensuring seamless operations and efficient problem resolution. </p>
+        <p> As part of the IT Department, we specialize in managing and addressing a wide range of <a href="{%url 'tickets_page'%}" style="text-decoration:underline;color: #333;">tickets</a>, including bugs, installations, configurations, and other technical issues.(<a href="{%url 'tickets_page'%}" style="text-decoration:underline;color: #333";>More Infos</a>)</p>
+
+        <p> Our team is committed to providing prompt and effective solutions, ensuring that both internal and external clients receive the support they need. In addition to handling our own company's tickets, we also manage tickets for other organizations, leveraging our expertise to deliver high-quality service and gain valuable insights from each project.</p>
+        
+        <p> Our goal is to maintain optimal performance and reliability across all systems, contributing to the overall success of Olea and its partners. Whether it's troubleshooting technical issues or implementing new solutions, we are dedicated to excellence in every aspect of our work.</p>
+</section>
+
+<section id="our-mission">
+    <h2>OLEA Ticket répond à un seul objectif:</h2>
+    <div class="mission-container">
+        <div class="mission-column">
+            <!-- Exemple d'icône SVG directement dans le HTML -->
+            <svg  class="mission-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 9l9-7 9 7v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9z"></path>
+                <path d="M9 22V12h6v10"></path>
+              </svg>            <h3>Gérer les tickets de l'entreprise OLEA</h3>
+            <p>Nous nous occupons de la gestion complète des tickets pour l'entreprise OLEA, assurant un suivi efficace et une résolution rapide des problèmes.</p>
+        </div>  
+</section>
+
+
+
+
+
+<div class="slides-container">
+    {% for role, users in users_by_role.items %}
+    <div class="role-section">
+        <h2 class="role-title" style="text-align:center;">{{ role|capfirst }}</h2>
+        <div class="slide-container swiper">
+            <div class="slide-content">
+                <div class="card-wrapper swiper-wrapper">
+                    {% for user in users %}
+                    <div class="card swiper-slide">
+                        <div class="image-content">
+                            <span class="overlay"></span>
+                            <div class="image-section">
+                              {% if user.profile_image %}
+                                  <img src="{{ user.profile_image.url }}" alt="{{ user.username }}" class="img-thumbnail" style="width: 100px; height: 100px;">
+                              {% else %}
+                                  <img src="{% static 'website/images/user.png' %}" alt="Default profile image" class="img-thumbnail" style="width: 100px; height: 100px;">
+                              {% endif %}
+                          </div>
+                        </div>
+                        <div class="card-content">
+                            <h2 class="name">{{ user.username }}</h2>
+                            <p class="description">Role: {{ user.get_role_display }}</p>
+                            <div class="social-icons" >
+                                <a href="{{ user.linkedin_url }}" target="_blank" >
+                                    <i class="fab fa-linkedin" ></i>
+                                </a>
+                            </div>                       
+                         </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="swiper-button-next swiper-navBtn"></div>
+            <div class="swiper-button-prev swiper-navBtn"></div>
+            <div class="swiper-pagination"></div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+
+
+
+
+
+<section id="call-to-action">
+    <h2>Get in Touch</h2>
+    <p>If you have any questions, feel free to <a href="{%url 'contact'%}">contact us</a>.</p>
+</section>
+
+
+
+<footer>
+
+    <div>
+        <a href="#"><i  class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+    </div>
+</footer>
+{% endblock  %}
+{%block extrajs%}
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+    var swiperContainers = document.querySelectorAll('.slide-container');
+    swiperContainers.forEach(function(container) {
+        new Swiper(container.querySelector('.slide-content'), {
+            slidesPerView: 3,
+            spaceBetween: 25,
+            loop: true,
+            centerSlide: 'true',
+            fade: 'true',
+            grabCursor: 'true',
+            pagination: {
+                el: container.querySelector('.swiper-pagination'),
+                clickable: true,
+                dynamicBullets: true,
+            },
+            navigation: {
+                nextEl: container.querySelector('.swiper-button-next'),
+                prevEl: container.querySelector('.swiper-button-prev'),
+            },
+            breakpoints:{
+                0: {
+                    slidesPerView: 1,
+                },
+                520: {
+                    slidesPerView: 2,
+                },
+                950: {
+                    slidesPerView: 3,
+                },
+            },
+        });
+    });
+</script>
+{%endblock%}

@@ -1,11 +1,371 @@
 {% extends "admin/base_site.html" %}
+{%load static%}
+
 
 {% block title %}TYPES TICKETS{% endblock %}
 
-{% block extrastyle %} {% endblock %}
+{% block extrastyle %} 
+  <!-- Include DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+    #typetickets_table th {
+        padding: 50px 90px; /* Adjust this value as needed */
+        text-align: center;
+        background-color: #007bff;
+        color: white;
+    }
+
+    /* Apply padding to table cells */
+    #typetickets_table td {
+        padding: 10px; /* Adjust this value as needed */
+        text-align: center;
+        border: 1px solid #dee2e6; /* Add a border for better clarity */
+    }
+
+
+</style>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/noty@3.1.4/lib/noty.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/noty@3.1.4/lib/themes/mint.css" />
+  
+
+
+{% endblock %}
 
 {% block content %}
 
+
+
+
+
+
+
+
+<div style="text-align: center; margin-top: 20px;">
+    <a href="{% url 'index' %}">
+        <button style="padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">
+            Return to Menu
+        </button>
+    </a>
+</div>
+
+
+<div class="col-12 col-md-12 order-2 order-md-1">
+    <div class="card-header">
+        <h3 class="card-title"><b>{{ _('LISTE DES TICKETS') }}</b></h3>
+        <div class="card-tools">
+            <a class="btn btn-sm btn-default" data-toggle="modal" data-target="#add_modal_typeticket"><i
+                    class="fas fa-plus"></i> {{ _('Nouveau Typeticket') }}</a>
+        </div>
+    </div>
+</div>
+
     <h3>TYPES TICKETS TABLE (CRUD MODALS)</h3>
 
+
+    <div>
+
+    <div class="col-12 col-md-4">
+        <label for="search_libelle">:</label>
+        <select id="search_libelle" name="search_libelle" class="form-control">
+            <option value="">Tous les libellés</option>
+            {% for typeticket in types %}
+                <option value="{{ typeticket.libelle }}">{{ typeticket.libelle }}</option>
+            {% endfor %}
+        </select>
+    </div>
+</div>
+
+
+<div class="col-12 col-md-4">
+    <label for="">Type:</label>
+    <select id="search_code" name="search_code" class="form-control">
+        <option value="">Tous les codes</option>
+        {% for typeticket in types %}
+            <option value="{{ typeticket.code }}">{{ typeticket.code }}</option>
+        {% endfor %}
+    </select>
+</div>
+</div>
+
+    <table id="typetickets_table" class="display" style="width: 100%; border-collapse: collapse;">
+        <thead>
+            <tr>
+                <th>libelle</th>
+                <th>code</th>
+                <th>actions</th>
+
+                
+            
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data will be loaded here via AJAX -->
+        </tbody>
+    </table>
+
+                  
+              
+          
+      
+       
+
+
 {% endblock %}
+
+
+{% block extrajs %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/noty@3.1.4/lib/noty.min.js"></script>
+<script src="{% static "website/js/jquery.noty.packaged.min.js" %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.js"></script>
+<script src="{% static "website/js/jquery.validate.js" %}"></script>
+
+
+<script>
+    $(document).ready(function() {
+        // Initialize DataTable
+        dataTable = $('#typetickets_table').DataTable({
+            "language": {
+                "url": "{% static 'website/datatable/i18n/French.json' %}"
+            },
+            "serverSide": true,
+            "ajax": {
+                "url": "{% url 'types_tickets_datatable' %}",
+                "data": function(data) {
+                    data.page = data.start / data.length + 1; // Adjust if needed
+                    data.libelle = $('#search_libelle').val();
+                    data.code = $('#search_code').val();
+                },
+                "dataSrc": function(json) {
+                    return json.data;
+                }
+            },
+            "columns": [
+                { "data": "libelle", "orderable": true },
+                { "data": "code", "orderable": true },
+                { "data": "actions" }
+            ],
+            "paging": true,
+            "pageLength": 10,
+            "processing": false,
+            "searching": true // Enable searching if you have search inputs
+        });
+  
+
+        // Event listener for the search inputs
+        $('#search_libelle, #search_code').on('keyup change', function() {
+            $('#typetickets_table').DataTable().ajax.reload();
+        });
+
+
+
+
+    
+     
+
+
+
+
+        // Update modal
+        $('#typetickets_table').on('click', '.typeticket-update-link', function(e) {
+            e.preventDefault();
+            var url = $(this).attr('href');
+    
+            $.get(url, function(data) {
+                var tempDiv = $('<div>').html(data);
+                var content = tempDiv.find('.modal-content').html();
+                $('#update_modal_typeticket .modal-content').html(content);
+                $('#update_modal_typeticket').modal('show');
+    
+                $('#btn_update_typeticket').off('click').on('click', function(e) {
+                    e.preventDefault();
+                    $.ajax({
+                        type: 'POST',
+                        url: $('#form_update_typeticket').attr('action'),
+                        data: $('#form_update_typeticket').serialize(),
+                        success: function(response) {
+                            if (response.statut == 1) {
+                                notifySuccess(response.message, function() {
+                                    location.reload();
+                                });
+                            } else {
+                                notifyWarning(response.message);
+                            }
+                        },
+                        error: function() {
+                            notifyWarning("Erreur lors de l'enregistrement");
+                        }
+                    });
+                });
+            });
+        });
+
+        // Delete type ticket with confirmation
+        $(document).on("click", ".typeticket-delete-link", function(e) {
+            e.preventDefault();
+            let typeticket_id = $(this).data('typeticket_id');
+            let href = $(this).attr('href');
+
+            let n = noty({
+                text: 'Voulez-vous vraiment supprimer ce typeticket ?',
+                type: 'warning',
+                dismissQueue: true,
+                layout: 'center',
+                theme: 'defaultTheme',
+                buttons: [
+                    {
+                        addClass: 'btn btn-primary',
+                        text: 'OUI',
+                        onClick: function($noty) {
+                            $noty.close();
+                            $.ajax({
+                                type: 'POST',
+                                url: href,
+                                data: {
+                                    'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(),
+                                    'typeticket_id': typeticket_id
+                                },
+                                success: function(response) {
+                                    if (response.statut == 1) {
+                                        notifySuccess(response.message, function() {
+                                            location.reload();
+                                        });
+                                    } else {
+                                        notifyWarning(response.message);
+                                    }
+                                },
+                                error: function() {
+                                    notifyWarning("Erreur lors du traitement");
+                                }
+                            });
+                        }
+                    },
+                    {
+                        addClass: 'btn btn-danger',
+                        text: 'Annuler',
+                        onClick: function($noty) {
+                            $noty.close();
+                        }
+                    }
+                ]
+            });
+        });
+
+        // Add type ticket form submission
+        $(document).on("click", "#btn_save_typeticket", function(e) {
+            e.preventDefault();
+            let formulaire = $('#addtypeticketForm');
+
+            if (formulaire.valid()) {
+                $.ajax({
+                    type: 'POST',
+                    url: formulaire.attr('action'),
+                    data: formulaire.serialize(),
+                    success: function(response) {
+                        if (response.statut == 1) {
+                            $('#typetickets_table').DataTable().ajax.reload();
+                            notifySuccess(response.message, function() {
+                                location.reload();
+                            });
+                        } else {
+                            notifyWarning(response.message);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        notifyWarning("Erreur lors de l'enregistrement: " + xhr.responseText);
+                    }
+                });
+            }
+        });
+
+        var my_noty; // Global variable to allow closing the popup from outside
+
+        // Notification functions
+        function notifySuccess(message, fnCallback) {
+            closeExistingNoty();
+            my_noty = noty({
+                text: message,
+                type: 'success',
+                dismissQueue: true,
+                layout: 'center',
+                theme: 'defaultTheme',
+                buttons: [{
+                    addClass: 'btn btn-primary',
+                    text: 'OK',
+                    onClick: function($noty) {
+                        if (typeof fnCallback === 'function') fnCallback();
+                        $noty.close();
+                    }
+                }]
+            });
+        }
+
+        function notifyWarning(message, fnCallback) {
+            closeExistingNoty();
+            my_noty = noty({
+                text: message,
+                type: 'warning',
+                dismissQueue: true,
+                layout: 'center',
+                theme: 'defaultTheme',
+                buttons: [{
+                    addClass: 'btn btn-primary',
+                    text: 'OK',
+                    onClick: function($noty) {
+                        if (typeof fnCallback === 'function') fnCallback();
+                        $noty.close();
+                    }
+                }]
+            });
+        }
+
+        function notifyError(message, fnCallback) {
+            closeExistingNoty();
+            my_noty = noty({
+                text: message,
+                type: 'error',
+                dismissQueue: true,
+                layout: 'center',
+                theme: 'defaultTheme',
+                buttons: [{
+                    addClass: 'btn btn-primary',
+                    text: 'OK',
+                    onClick: function($noty) {
+                        if (typeof fnCallback === 'function') fnCallback();
+                        $noty.close();
+                    }
+                }]
+            });
+        }
+
+        function closeExistingNoty() {
+            if (my_noty) {
+                my_noty.close();
+            }
+        }
+    });
+</script>
+ <!-- Première modale -->
+{% include 'website/Modals/types/modal_add_typeticket.html' %} 
+  <!-- Deuxième modale -->
+{% include 'website/Modals/types/modal_update_typeticket.html' %}
+
+
+
+
+    
+
+    
+
+   
+  
+
+ 
+{% endblock %}
+

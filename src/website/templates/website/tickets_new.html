@@ -1,0 +1,562 @@
+{% extends "admin/base_site.html" %}
+{%load static%}
+
+{% block title %}TICKETS{% endblock %}
+
+{% block extrastyle %}
+    <style>
+        
+
+
+        /* Style for the Retour button */
+        .btn-default {
+            background-color: #6c757d; /* Gray background color */
+            color: white; /* Text color */
+            border: none; /* Remove default border */
+            border-radius: 8px; /* Rounded corners */
+            padding: 10px 20px; /* Padding inside the button */
+            font-size: 16px; /* Font size */
+            cursor: pointer; /* Change cursor on hover */
+            transition: background-color 0.3s ease, border-radius 0.3s ease; /* Smooth transition for hover effects */
+        }
+
+        /* Hover effect for the Retour button */
+        .btn-default:hover {
+            background-color: #5a6268; /* Darker gray background on hover */
+            border-radius: 12px; /* Increase border radius on hover */
+        }
+
+        /* Optional: active state for the button */
+        .btn-default:active {
+            background-color: #343a40; /* Even darker gray background when clicked */
+        }
+        
+        /* Hide default DataTables filter */
+        div.dataTables_filter {
+            display: none;
+        }
+        /* Styling for the DataTable */
+        table.dataTable {
+            border: 1px solid #dee2e6;
+            border-radius: 0.25rem;
+        }
+        
+        table.dataTable thead th {
+            background-color: #007bff;
+            color: white;
+        }
+        
+        table.dataTable tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+        
+        table.dataTable td {
+            vertical-align: middle;
+        }
+        /* General styling for the card */
+        .card-body {
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Row styling to ensure proper alignment */
+        .card-body .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -10px;
+        }
+        
+        /* Styling for each column */
+        .card-body .row .col-12 {
+            padding: 10px;
+        }
+        
+        .card-body .row .col-md-4 {
+            padding: 10px;
+            flex: 1; /* Ensure columns are evenly distributed */
+            min-width: 200px; /* Ensure the inputs have a minimum width */
+        }
+        
+        /* General input and select styling */
+        .card-body .form-control {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 10px;
+            font-size: 14px;
+            width: 100%;
+            box-sizing: border-box;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        
+        /* Input and select hover and focus effects */
+        .card-body .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+        
+        /* Label styling */
+        .card-body label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #333;
+        }
+        
+        /* Custom select wrapper */
+        .custom-select-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        
+        .custom-select-wrapper select {
+            appearance: none;
+            background-color: white;
+            padding-right: 40px; /* Space for the arrow */
+        }
+        
+        /* Custom select arrow styling */
+        .custom-select-wrapper::after {
+            content: '\25BC'; /* Unicode for down arrow */
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            font-size: 12px;
+            color: #333;
+            transition: transform 0.3s ease;
+        }
+        
+        .custom-select-wrapper.open::after {
+            content: '\25B2'; /* Unicode for up arrow */
+        }
+
+    </style>
+    {% comment %} <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet"> {% endcomment %}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/noty@3.1.4/lib/noty.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/noty@3.1.4/lib/themes/mint.css" />
+
+
+
+{% endblock %}
+
+{% block content %}
+
+
+ <div style="text-align: center; margin-top: 20px;">
+    <a href="{% url 'index' %}">
+        <button style="padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">
+            Return to Menu
+        </button>
+    </a>
+</div>
+
+
+
+<div class="col-12 col-md-12 order-2 order-md-1">
+    <div class="card-header">
+        <h3 class="card-title"><b>{{ _('LISTE DES TICKETS') }}</b></h3>
+        <div class="card-tools">
+            <a class="btn btn-sm btn-default" data-toggle="modal" data-target="#add_modal_ticket"><i
+                    class="fas fa-plus"></i> {{ _('Nouveau ticket') }}</a>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <!-- Search Form -->
+        <div class="row mb-3">
+            <div class="col-12 col-md-4 d-flex align-items-center">
+                <label for="search_title" class="me-2">Titre:</label>
+                <input type="text" id="search_title" class="form-control" placeholder="Rechercher par titre">
+            </div>
+            <div class="col-12 col-md-4 custom-select-wrapper d-flex align-items-center">
+                <label for="search_created_by" class="me-2">Créé par:</label>
+                <select id="search_created_by" name="search_created_by" class="form-control">
+                    <option value="">Tous les utilisateurs</option>
+                    {% for user in users %}
+                        <option value="{{ user.username }}">{{ user.username }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-12 col-md-4 custom-select-wrapper d-flex align-items-center">
+                <label for="search_type" class="me-2">Type:</label>
+                <select id="search_type" name="search_type" class="form-control">
+                    <option value="">Tous les types</option>
+                    {% for typeticket in typetickets %}
+                        <option value="{{ typeticket.libelle }}">{{ typeticket.libelle }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-12 col-md-4 custom-select-wrapper d-flex align-items-center">
+                <label for="search_status" class="me-2">Statut:</label>
+                <select id="search_status" class="form-control">
+                    <option value="">Tous les statuts</option>
+                    <option value="EN ATTENTE">EN ATTENTE</option>
+                    <option value="EN COURS">EN COURS</option>
+                    <option value="TRAITÉ">TRAITÉ</option>
+                    <option value="CLÔTURÉ">CLÔTURÉ</option>
+                    <option value="RESOLU">RESOLU</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    
+
+
+
+
+
+
+<div class="card-body">
+    <div>
+        <div class="row">
+            <div class="col-12 col-md-12 col-sm-12">
+
+                <table id="table_tickets" class="display" style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr>
+                            <th scope="col">code</th>
+                            <th scope="col">type</th>
+                            <th scope="col">cree par</th>
+                            <th scope="col">statut</th>
+                            <th scope="col">title</th>
+                            <th scope="col">description</th>
+                            <th scope="col">attachments</th>
+                            <th scope="col">traité par</th>
+                             <th scope="col">actions</th> 
+
+
+
+
+                                             </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+
+
+{% endblock %}
+
+{% block extrajs %}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/noty@3.1.4/lib/noty.min.js"></script>
+<script src="{% static "website/js/jquery.noty.packaged.min.js" %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.js"></script>
+<script src="{% static "website/js/jquery.validate.js" %}"></script>
+
+
+<script>
+    $(document).ready(function() {
+        // Initialize DataTable
+        dataTable = $('#table_tickets').DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/French.json"
+            },
+            "serverSide": true,
+            "ajax": {
+                "url": "{% url 'tickets_datatable' %}",
+                "data": function(data) {
+                    data.page = data.start / data.length + 1;
+                    data.created_by = $('#search_created_by').val();
+                    data.title = $('#search_title').val();
+                    data.type = $('#search_type').val();
+                    data.status = $('#search_status').val();
+                    data.date_from = $('#search_date_from').val();  // Date de début
+                    data.date_to = $('#search_date_to').val();      // Date de fin
+                },
+                "dataSrc": function(json) {
+                    return json.data;
+                }
+            },
+            "columns": [
+                { "data": "code", "orderable": true },
+                { "data": "type_ticket", "orderable": true },
+                { "data": "created_by", "orderable": true },
+                { "data": "status", "orderable": true, "searchable": true },
+                { "data": "title", "orderable": true },
+                { "data": "description", "orderable": true },
+                { "data": "attachments", "orderable": true },
+                { "data": "traite_par", "orderable": true },
+                { "data": "actions", "orderable": false, "searchable": false }
+            ],
+            "paging": true,
+            "pageLength": 10,
+            "processing": false,
+            "searching": false
+        });
+    
+        // Add custom search functionality
+        $('#search_title, #search_type, #search_status, #search_created_by, #search_date_from, #search_date_to').on('keyup change', function() {
+            $('#table_tickets').DataTable().ajax.reload();
+        });
+    
+        // Event listener for "Details" link
+        $('#table_tickets').on('click', '.ticket-details-link', function(e) {
+            e.preventDefault();
+            var url = $(this).attr('href');
+    
+            // Load the modal content from the server
+            $.get(url, function(data) {
+                var tempDiv = $('<div>').html(data);
+                var content = tempDiv.find('.modal-body').html();
+                $('#read_modal_ticket .modal-body').html(content);
+                $('#read_modal_ticket').modal('show');
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                console.error("Request failed: " + textStatus + ", " + errorThrown);
+                alert("Failed to load details. Please try again.");
+            });
+        });
+    
+        // Event listener for "Update" link
+        $(document).on("click", ".ticket-update-link", function(e) {
+            e.preventDefault();
+            let modalUrl = $(this).attr('href');
+    
+            // Load the modal content via AJAX
+            $.get(modalUrl, function(data) {
+                var tempDiv = $('<div>').html(data);
+                var content = tempDiv.find('.modal-content').html();
+                $('#modifier_modal_ticket .modal-content').html(content);
+                $('#modifier_modal_ticket').modal('show');
+    
+                // Handle form submission
+                $('#form_update_ticket').off('submit').on('submit', function(e) {
+                    e.preventDefault();
+                    $.ajax({
+                        type: 'POST',
+                        url: $(this).attr('action'),
+                        data: $(this).serialize(),
+                        success: function(response) {
+                            if (response.statut == 1) {
+                                notifySuccess(response.message, function() {
+                                    location.reload();
+                                });
+                            } else {
+                                notifyWarning(response.message);
+                            }
+                        },
+                        error: function() {
+                            notifyWarning("Erreur lors de l'enregistrement");
+                        }
+                    });
+                });
+            });
+        });
+    
+        // Event listener for "Delete" link
+        $(document).on("click", "#ticket-delete-link", function(e) {
+            e.preventDefault();
+            let typeticket_id = $(this).data('typeticket_id');
+            let href = $(this).attr('href');
+    
+            // Ask for confirmation
+            noty({
+                text: 'Voulez-vous vraiment supprimer ce ticket ?',
+                type: 'warning',
+                dismissQueue: true,
+                layout: 'center',
+                theme: 'defaultTheme',
+                buttons: [
+                    {
+                        addClass: 'btn btn-primary',
+                        text: 'OUI',
+                        onClick: function($noty) {
+                            $noty.close();
+                            $.ajax({
+                                type: 'POST',
+                                url: href,
+                                data: {
+                                    'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(),
+                                    'typeticket_id': typeticket_id
+                                },
+                                success: function(response) {
+                                    if (response.statut == 1) {
+                                        notifySuccess(response.message, function() {
+                                            location.reload();
+                                        });
+                                    } else {
+                                        notifyWarning(response.message);
+                                    }
+                                },
+                                error: function() {
+                                    notifyWarning("Erreur lors du traitement");
+                                }
+                            });
+                        }
+                    },
+                    {
+                        addClass: 'btn btn-danger',
+                        text: 'Annuler',
+                        onClick: function($noty) {
+                            $noty.close();
+                        }
+                    }
+                ]
+            });
+        });
+    
+        // AJAX form submission for adding a ticket
+        $(document).on("click", "#btn_save_ticket", function(e) {
+            e.preventDefault();
+            let formulaire = $('#addTicketForm');
+            if (formulaire.valid()) {
+                $.ajax({
+                    type: 'POST',
+                    url: formulaire.attr('action'),
+                    data: formulaire.serialize(),
+                    success: function(response) {
+                        if (response.statut == 1) {
+                            $('#table_tickets').DataTable().ajax.reload();
+                            notifySuccess(response.message, function() {
+                                location.reload();
+                            });
+                        } else {
+                            notifyWarning(response.message);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        notifyWarning("Erreur lors de l'enregistrement: " + xhr.responseText);
+                    }
+                });
+            }
+        });
+    
+        // Notification functions
+        var my_noty;
+    
+        function notifySuccess(message, fnCallback) {
+            closeExistingNoty();
+            my_noty = noty({
+                text: message,
+                type: 'success',
+                dismissQueue: true,
+                layout: 'center',
+                theme: 'defaultTheme',
+                buttons: [
+                    {
+                        addClass: 'btn btn-primary',
+                        text: 'OK',
+                        onClick: function($noty) {
+                            if (typeof fnCallback === 'function') fnCallback();
+                            $noty.close();
+                        }
+                    }
+                ]
+            });
+        }
+    
+        function notifyWarning(message, fnCallback) {
+            closeExistingNoty();
+            my_noty = noty({
+                text: message,
+                type: 'warning',
+                dismissQueue: true,
+                layout: 'center',
+                theme: 'defaultTheme',
+                buttons: [
+                    {
+                        addClass: 'btn btn-primary',
+                        text: 'OK',
+                        onClick: function($noty) {
+                            if (typeof fnCallback === 'function') fnCallback();
+                            $noty.close();
+                        }
+                    }
+                ]
+            });
+        }
+    
+        function notifyError(message, fnCallback) {
+            closeExistingNoty();
+            my_noty = noty({
+                text: message,
+                type: 'error',
+                dismissQueue: true,
+                layout: 'center',
+                theme: 'defaultTheme',
+                buttons: [
+                    {
+                        addClass: 'btn btn-primary',
+                        text: 'OK',
+                        onClick: function($noty) {
+                            if (typeof fnCallback === 'function') fnCallback();
+                            $noty.close();
+                        }
+                    }
+                ]
+            });
+        }
+    
+        function closeExistingNoty() {
+            if (my_noty) {
+                my_noty.close();
+            }
+        }
+    
+        // Setup custom select functionality
+        function setupCustomSelect(selector) {
+            const selectWrappers = document.querySelectorAll(selector);
+    
+            selectWrappers.forEach(function(wrapper) {
+                const selectElement = wrapper.querySelector('select');
+    
+                selectElement.addEventListener('click', function() {
+                    wrapper.classList.toggle('open');
+                });
+    
+                document.addEventListener('click', function(event) {
+                    if (!wrapper.contains(event.target)) {
+                        wrapper.classList.remove('open');
+                    }
+                });
+    
+                selectElement.addEventListener('change', function() {
+                    wrapper.classList.remove('open');
+                });
+            });
+        }
+    
+        // Initialize custom selects
+        document.addEventListener('DOMContentLoaded', function() {
+            setupCustomSelect('.custom-select-wrapper');
+        });
+    });
+    </script>
+    
+<!-- Première modale -->
+{% include 'website/Modals/tickets/modal_update_ticket.html' %}
+
+<!-- Deuxième modale -->
+{% include 'website/Modals/tickets/modal_add_ticket.html' %}
+
+<!-- Troisième modale -->
+{% include 'website/Modals/tickets/modal_read_ticket.html' %}
+
+{% comment %} /*ddddd*/ {% endcomment %}
+
+
+
+
+
+
+
+
+
+{% endblock %}
+

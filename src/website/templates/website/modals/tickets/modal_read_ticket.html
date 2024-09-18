@@ -1,0 +1,70 @@
+
+
+ <div class="modal fade" id="read_modal_ticket" tabindex="-1" aria-labelledby="readTicketModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- En-tête de la modale -->
+        <div class="modal-header">
+          <h5 class="modal-title" id="addTicketModalLabel">abc du Ticket</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        
+        <!-- Corps de la modale -->
+        <div class="modal-body">
+          <div class="modal-item">
+            <strong>Code :</strong> <span>{{ ticket.code }}</span>
+          </div>
+          <div class="modal-item">
+            <strong>Type :</strong> <span>{{ ticket.type_ticket.libelle }}</span>
+          </div>
+          <div class="modal-item">
+            <strong>Créé par :</strong> <span>{{ ticket.created_by.username }}</span>
+          </div>
+          <div class="modal-item">
+            <strong>Statut :</strong> <span>{{ ticket.status }}</span>
+          </div>
+          <div class="modal-item">
+            <strong>Titre :</strong> <span>{{ ticket.title }}</span>
+          </div>
+          <div class="modal-item">
+            <strong>Description :</strong><span> {{ ticket.description }}</span>
+          </div>
+          <div class="modal-item">
+            <strong>Traité par :</strong> <span>{{ ticket.traite_par.username }}</span>
+          </div>
+  
+          <!-- Section des pièces jointes -->
+          <div class="modal-item">
+            <strong>Pièces jointes :</strong>
+            {% if ticket.attachments %}
+              <a href="{{ ticket.attachments.url }}" class="attachment-link">{{ ticket.attachments.name }}</a>
+            {% else %}
+              <span class="text-muted">N/A</span>
+            {% endif %}
+          </div>
+              <!-- Liste d'icônes pour les fichiers -->
+              <div class="file-list mt-3">
+                <ul class="icon-list list-unstyled">
+                  <li>
+                    <a href="#"><i class="bi bi-file-earmark-pdf"></i> <span>PDF</span></a>
+                  </li>
+                  <li>
+                    <a href="#"><i class="bi bi-file-earmark-word"></i> <span>Word</span></a>
+                  </li>
+                  <li>
+                    <a href="#"><i class="bi bi-file-earmark-excel"></i> <span>Excel</span></a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          
+      
+  
+        <!-- Pied de page de la modale -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+        </div>
+    </div>
+</div>
+</div>
+

@@ -8,8 +8,8 @@ class RoleUtilisateur(models.TextChoices):
     CLIENT = "CLIENT"
     DIRECTEUR = "DIRECTEUR"
     TESTEUR = "TESTEUR"
-    EXPERT_USER = "EXPERT USER"
-    DATABASE_EXPERT = "EXPERT BASE DE DONNEES"
+    # EXPERT_USER = "EXPERT USER"
+    # DATABASE_EXPERT = "DATABASE_EXPERT"
 
 
 class StatutTicket(models.TextChoices):
@@ -17,3 +17,4 @@ class StatutTicket(models.TextChoices):
     ENCOURS = "EN COURS"
     TRAITE = "TRAITÉ"
     CLOTURE = "CLÔTURÉ"
+    resolved="RESOLU"

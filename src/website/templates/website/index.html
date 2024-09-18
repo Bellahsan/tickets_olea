@@ -1,11 +1,113 @@
-{% extends "admin/base_site.html" %}
+ {% extends "admin/base_site.html" %} 
+{% load static %}
 
 {% block title %}INDEX{% endblock %}
 
-{% block extrastyle %} {% endblock %}
+{% block extrastyle %} 
+<style>
+    body {
+        background-color: white;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+    }
+
+    .grid-container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        padding: 0;
+        margin: 0;
+        top: 20px;
+    }
+
+    .card {
+        background-color: white;
+        color: white;
+        padding: 60px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        width: 100%;
+    }
+
+    .card img {
+        width: 20%;
+        height: auto;
+        border-radius: 8px 8px 0 0;
+    }
+
+     .card a {
+        color: black;
+        text-decoration: none;
+        font-weight: bold;
+        family: "Helvet  } 
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 40px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+
+</style>
+{% endblock %}
 
 {% block content %}
 
-    <h3>HOMEPAGE - DASHBOARD(HOME PAGE - CHARTS - TEMPLATES)</h3>
+{% comment %} <img src="{% static 'website/images/meteogif.gif' %}" alt="Loading animation" id="meteogif" style="position: absolute; top: 40px; right: 10px;"> {% endcomment %}
 
+
+
+<div class="grid-container">
+    <!-- Ligne 1 -->
+    <div class="card">
+        <img src="{% static 'website/images/tickets.png' %}" alt="Image 1">
+        <h2><a href="{% url 'tickets_page' %}">Liste des Tickets</a></h2>
+        <p>Contenu de la card 1</p>
+    </div>
+
+    <div class="card">
+        <img src="{% static 'website/images/typeticket.png' %}" alt="Image 1">
+        <h2><a href="{% url 'types' %}">Liste des Typetickets </a></h2>
+        <p>Contenu de la card 3</p>
+    </div>
+
+    {% comment %} <div class="card">  
+        <img src="{% static 'website/images/users.png' %}" alt="Image 1">
+        <h2><a href="{% url 'users' %}">Liste des Utilisateurs</a></h2>
+        <p>Contenu de la card 2</p>
+    </div> {% endcomment %}
+   
+ <!-- Ligne 2 -->
+  
+    <div class="card">
+        <img src="{% static 'website/images/contact.png' %}" alt="Image 1">
+        <h2><a href="{% url 'contact' %}">Contact</a></h2>
+        <p>Contenu de la card 5</p>
+    </div>
+
+
+  
+    <div class="card">
+        <img src="{% static 'website/images/statistics.png' %}" alt="Image 1">
+        <h2><a href="{% url 'statistics' %}">Dashboard&Statistics</a></h2>
+        <p>Contenu de la card 7</p>
+    </div>
+
+    <div class="card">
+        <img src="{% static 'website/images/about us.png' %}" alt="Image 1">
+        <h2><a href="{% url 'about_us' %}">About Us</a></h2>
+        <p>Contenu de la card 9</p>
+    </div>
+</div>
 {% endblock %}

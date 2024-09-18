@@ -1,0 +1,91 @@
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+        <style>
+            #btn_update_typeticket {
+                background-color: #28a745; /* Green background color */
+                color: white; /* Text color */
+                border: none; /* Remove default border */
+                border-radius: 8px; /* Rounded corners */
+                padding: 10px 20px; /* Padding inside the button */
+                font-size: 16px; /* Font size */
+                cursor: pointer; /* Change cursor on hover */
+                transition: background-color 0.3s ease, border-radius 0.3s ease; /* Smooth transition for hover effects */
+            }
+            
+             Hover effect for the button 
+            #btn_update_typeticket:hover {
+                background-color: #218838; /* Darker green background on hover */
+                border-radius: 12px; /* Increase border radius on hover */
+            }
+            
+            Optional: active state for the button */
+            #btn_update_typeticket:active {
+                background-color: #1e7e34; /* Even darker green background when clicked */
+            }
+            </style>
+    </head>
+    <body>
+        <div class="modal fade" id="update_modal_typeticket" data-backdrop="static"   data-keyboard="false" aria-hidden="true" style="display: none">
+            <div class="modal-dialog"  >
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="updatetypeTicketModalLabel">Modifier un TypeTicket</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        
+                    {% if typeticket %}
+                    
+                    <form action="{% url 'update_typeticket' typeticket.id %}" enctype="multipart/form-data" id="form_update_typeticket" method="POST" >
+                        {% csrf_token %}
+                        <input type="hidden" name="typeticket_id" value="{{ typeticket.id }}" />
+                  
+                        <!-- Type de Ticket -->
+                  
+                        
+                        <!-- Libelle -->
+                        <div class="mb-3">
+                          <label for="libelle">Libelle <span class="required">*</span></label>
+                          <input type="text" class="form-control" id="libelle" name="libelle" value="{{ typeticket.libelle }}" required>
+                        </div>
+    
+                         <!-- Code -->
+                         <div class="mb-3">
+                            <label for="code">Code <span class="required">*</span></label>
+                            <textarea class="form-control" id="code" name="code" rows="3" required>{{ typeticket.code }}</textarea>
+                          </div>
+                          
+                        </div>        
+                        
+               
+                     
+          
+                        <div class="modal-footer justify-content-between">
+    
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                            <button type="submit" id="btn_update_typeticket" value="Valider" class="btn o-bg-primary">Valider</button>
+                        </div>
+                    </form>
+                    {% else %}
+                    <p>No typeticket ID available.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+   
+    </body>
+</html>
+
+
+
+
+
+   

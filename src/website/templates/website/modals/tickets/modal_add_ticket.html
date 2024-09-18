@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /* Style for the update ticket button */
+        #btn_save_ticket {
+            background-color: #28a745; /* Green background color */
+            color: white; /* Text color */
+            border: none; /* Remove default border */
+            border-radius: 8px; /* Rounded corners */
+            padding: 10px 20px; /* Padding inside the button */
+            font-size: 16px; /* Font size */
+            cursor: pointer; /* Change cursor on hover */
+            transition: background-color 0.3s ease, border-radius 0.3s ease; /* Smooth transition for hover effects */
+        }
+    
+        /* Hover effect for the button */
+        #btn_save_ticket:hover {
+            background-color: #218838; /* Darker green background on hover */
+            border-radius: 12px; /* Increase border radius on hover */
+        }
+    
+        /* Optional: active state for the button */
+        #btn_save_ticket:active {
+            background-color: #1e7e34; /* Even darker green background when clicked */
+        }
+    </style>    
+</head>
+<body>
+
+<div  class="modal fade"  id="add_modal_ticket" data-backdrop="static" data-keyboard="false" aria-hidden="true"  style="display: none">
+	<div class="modal-dialog ">
+		<div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addTicketModalLabel">Ajouter un Ticket</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addTicketForm" method="post"  enctype="multipart/form-data" action="{%url 'add_ticket'%}">
+                    {% csrf_token %}
+                    
+                    <!-- Type de Ticket -->
+                    <div class="mb-3">
+                        <label for="typeticket" class="form-label">Type de Ticket</label>
+                        <select class="form-select" name="typeticket" id="typeticket" required>
+                            {% for typeticket in typetickets %}
+                                <option value="{{ typeticket.id }}">{{ typeticket.libelle }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <!-- Title -->
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Title</label>
+                        <input type="text" class="form-control" name="title" id="title" required>
+                    </div>
+                    
+                    <!-- Description -->
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" name="description" id="description" rows="3" required></textarea>
+                    </div>
+                    
+                    <!-- Attachments -->
+                    <div class="mb-3">
+                        <label for="attachments" class="form-label">Attachments</label>
+                        <input type="file" class="form-control" name="attachments" id="attachments">
+                    </div>
+
+                    <!-- Status -->
+                    <div class="mb-3">
+                        <label for="status" class="form-label">Status</label>
+                        <select class="form-select" name="status" id="status" required>
+                            {% for status in statuses %}
+                                <option value="{{ status }}">{{ status }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Traité par (optional) -->
+                    <div class="mb-3">
+                        <label for="traite_par" class="form-label">Traité par</label>
+                        <select class="form-select" name="traite_par" id="traite_par">
+                            <option value="" selected>Select a User</option>
+                            {% for user in users %}
+                                <option value="{{ user.id }}">{{ user.username }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                        <button type="submit"  id="btn_save_ticket" class="btn btn-primary" >Submit</button>
+                    </div>
+                    
+                </form>
+            </div>
+        </div>
+    </div>
+</div> 
+</body>
+</html>

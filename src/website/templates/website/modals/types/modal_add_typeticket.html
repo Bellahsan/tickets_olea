@@ -1,0 +1,71 @@
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        
+        #btn_save_typeticket {
+            background-color: #28a745; /* Green background color */
+            color: white; /* Text color */
+            border: none; /* Remove default border */
+            border-radius: 8px; /* Rounded corners */
+            padding: 10px 20px; /* Padding inside the button */
+            font-size: 16px; /* Font size */
+            cursor: pointer; /* Change cursor on hover */
+            transition: background-color 0.3s ease, border-radius 0.3s ease; /* Smooth transition for hover effects */
+        }
+    
+         Hover effect for the button 
+        #btn_save_typeticket:hover {
+            background-color: #218838; /* Darker green background on hover */
+            border-radius: 12px; /* Increase border radius on hover */
+        }
+    
+        Optional: active state for the button */
+        #btn_save_typeticket:active {
+            background-color: #1e7e34; /* Even darker green background when clicked */
+        }
+    </style>    
+</head>
+<body> 
+
+<div  class="modal fade"  id="add_modal_typeticket" data-backdrop="static" data-keyboard="false" aria-hidden="true" role="dialog"   style="display: none">
+	<div class="modal-dialog ">
+		<div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addtypeticketModalLabel">Ajouter un typeticket</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addtypeticketForm" method="post"  enctype="multipart/form-data" action="{%url 'add_typeticket'%}">
+                    {% csrf_token %}
+                    
+                   
+                         <!-- libelle -->
+                         <div class="mb-3">
+                            <label for="libelle" class="form-label">Libelle</label>
+                            <textarea class="form-control" name="libelle" id="libelle" rows="3" required></textarea>
+                        </div>
+                        
+                        <!-- Title -->
+                        <div class="mb-3">
+                            <label for="code" class="form-label">Code</label>
+                            <input type="text" class="form-control" name="code" id="code" required>
+                        </div>
+                    
+                        <div class="modal-footer justify-content-between">
+
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                            <button type="submit"  id="btn_save_typeticket" class="btn btn-primary" >Submit</button>
+                        </div>
+            
+                    
+                </form>
+            </div>
+        </div>
+    </div>
+</div> 
+{% comment %} </body>
+</html> {% endcomment %}

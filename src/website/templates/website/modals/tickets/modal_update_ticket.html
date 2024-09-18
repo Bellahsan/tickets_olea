@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <style>
+        /* Style for the update ticket button */
+        #btn_update_ticket {
+            background-color: #28a745; /* Green background color */
+            color: white; /* Text color */
+            border: none; /* Remove default border */
+            border-radius: 8px; /* Rounded corners */
+            padding: 10px 20px; /* Padding inside the button */
+            font-size: 16px; /* Font size */
+            cursor: pointer; /* Change cursor on hover */
+            transition: background-color 0.3s ease, border-radius 0.3s ease; /* Smooth transition for hover effects */
+        }
+
+        /* Hover effect for the button */
+        #btn_update_ticket:hover {
+            background-color: #218838; /* Darker green background on hover */
+            border-radius: 12px; /* Increase border radius on hover */
+        }
+
+        /* Optional: active state for the button */
+        #btn_update_ticket:active {
+            background-color: #1e7e34; /* Even darker green background when clicked */
+        }
+
+    </style>
+
+    <div class="modal fade" id="modifier_modal_ticket" data-backdrop="static" data-keyboard="false" aria-hidden="true" style="display: none">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="updateTicketModalLabel">Modifier un Ticket</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                {% if ticket %}
+                <form action="{% url 'update_ticket' ticket.id %}" enctype="multipart/form-data" id="form_update_ticket" method="POST" style="padding:50px;">
+                    {% csrf_token %}
+                    <input type="hidden" name="ticket_id" value="{{ ticket.id }}" />
+              
+                    <!-- Type de Ticket -->
+                    <div class="mb-3">
+                        <label for="typeticket_select">Type de Ticket <span class="required">*</span></label>
+                        <select class="form-select" name="typeticket" id="typeticket_select" required>
+                          {% for typeticket in typetickets %}
+                              <option value="{{ typeticket.id }}" {% if typeticket.id == ticket.type_ticket.id %}selected{% endif %}>
+                                  {{ typeticket.libelle }}
+                              </option>
+                          {% endfor %}
+                      </select>
+                    </div>
+                    
+                    <!-- Title -->
+                    <div class="mb-3">
+                      <label for="title">Titre <span class="required">*</span></label>
+                      <input type="text" class="form-control" id="title" name="title" value="{{ ticket.title }}" required>
+                    </div>
+                    
+                    <!-- Description -->
+                    <div class="mb-3">
+                      <label for="description">Description <span class="required">*</span></label>
+                      <textarea class="form-control" id="description" name="description" rows="3" required>{{ ticket.description }}</textarea>
+                    </div>
+                    
+                    <!-- Attachments -->
+                    <div class="mb-3">
+                      <label for="attachments">Pièces jointes <span class="required">*</span></label>
+                      <input type="file" class="form-control" name="attachments" id="attachments">
+                    </div>
+                    
+                    <!-- Status -->
+                    <div class="mb-3">
+                      <label for="status_select">Statut <span class="required">*</span></label>
+                      <select class="form-select" name="status" id="status_select" required>
+                        {% for status_value, status_label in statuses %}
+                            <option value="{{ status_value }}" {% if status_value == ticket.status %}selected{% endif %}>
+                                {{ status_label }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    </div>
+                    
+                    <!-- Assigné -->
+                    <div class="mb-3">
+                      <label for="assignee_select">Assigné</label>
+                      <select class="form-select" name="assignee" id="assignee_select">
+                          {% for user in users %}
+                          <option value="{{ user.id}}" {% if user.username == ticket.created_by.username %}selected{% endif %}>
+                            {{ user.username }}</option>
+                          {% endfor %}
+                      </select>
+                    </div>
+                    
+                    <!-- Traité par -->
+                    <div class="mb-3">
+                      <label for="traite_par_select">Traité par <span class="required">*</span></label>
+                      <select class="form-select" name="traite_par" id="traite_par_select" required>
+                          {% for user in users %}
+                          <option value="{{ user.id}}" {% if user.username == ticket.traite_par.username %}selected{% endif %}>
+                            {{ user.username }}</option>
+                          {% endfor %}
+                      </select>
+                    </div>
+                    
+                    <!-- Date de création -->
+      
+                    <div class="modal-footer justify-content-between">
+
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                        <button type="submit" id="btn_update_ticket" value="Valider" class="btn o-bg-primary">Valider</button>
+                    </div>
+                </form>
+                {% else %}
+                <p>No ticket ID available.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

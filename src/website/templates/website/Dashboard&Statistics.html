@@ -1,0 +1,270 @@
+{% extends "admin/base_site.html" %}
+
+{% load static %}
+{% block extrastyle %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f4f4f4;
+    }
+    .content {
+        display: block;
+        box-sizing: border-box;
+        font-size: 16px;
+        font-weight: 400;    
+        line-height: 24px;
+        padding: 0 8px;
+        text-align: left;
+        text-size-adjust: 100%;
+        unicode-bidi: isolate;
+        color: rgb(33, 37, 41);
+    }
+
+    .container-fluid {
+        box-sizing: border-box;
+        color: rgb(33, 37, 41);
+        display: block;
+        font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+        font-size: 16px;
+        font-weight: 400;
+        height: auto; /* Ajustez la hauteur selon le contenu */
+        line-height: 24px;
+        margin: 0;
+        padding: 7.5px;
+        text-align: left;
+        text-size-adjust: 100%;
+        unicode-bidi: isolate;
+        width: 737px;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    }
+    
+    .card-container {
+        display: flex;
+        gap: 30px;
+    }
+ 
+    
+</style>
+{% endblock %}
+{% block content %}
+<div style="text-align: center; margin-top: 20px;">
+    <a href="{% url 'index' %}">
+        <button style="padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">
+            Return to Menu
+        </button>
+    </a>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <!--begin::Col-->
+            <div class="col-lg-3 col-6">
+                <!--begin::Small Box Widget 1-->
+                <div class="small-box text-bg-primary">
+                    <div class="inner" style="backgroundColor:red">
+                        <h3>{{ number_of_tickets }}</h3>
+                        <p>Number of Tickets</p>
+                    </div>
+                    <svg class="small-box-icon" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path d="M2 6h20v12H2V6zm1-2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h20a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1H3zm0 1h20v12H3V5z"></path>
+                        <path d="M5 10h14v4H5v-4z"></path>
+                    </svg>
+                    <a href="{% url 'tickets_page' %}" class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover">
+                        More info <i class="bi bi-link-45deg"></i>
+                    </a>
+                </div>
+                <!--end::Small Box Widget 1-->
+            </div>
+            <!--end::Col-->
+
+            <div class="col-lg-3 col-6">
+                <!--begin::Small Box Widget 2-->
+                <div class="small-box text-bg-success">
+                    <div class="inner">
+                        <h3>{{ percentage_resolved_tickets|floatformat:2 }}<sup class="fs-5">%</sup></h3>
+                        <p>Resolved Ticket Rate</p>
+                    </div>
+                    <svg class="small-box-icon" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path d="M18.375 2.25c-1.035 0-1.875.84-1.875 1.875v15.75c0 1.035.84 1.875 1.875 1.875h.75c1.035 0 1.875-.84 1.875-1.875V4.125c0-1.036-.84-1.875-1.875-1.875h-.75zM9.75 8.625c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v11.25c0 1.035-.84 1.875-1.875 1.875h-.75a1.875 1.875 0 01-1.875-1.875V8.625zM3 13.125c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v6.75c0 1.035-.84 1.875-1.875 1.875h-.75A1.875 1.875 0 013 19.875v-6.75z"></path>
+                    </svg>
+                    <a href="{% url 'types'  %}"  class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover">Filter by Active Status</a>
+                     <i class="bi bi-link-45deg"></i>
+                    </a>
+                    
+                </div>
+                <!--end::Small Box Widget 2-->
+            </div>
+            <!--end::Col-->
+
+            <div class="col-lg-3 col-6">
+                <!--begin::Small Box Widget 3-->
+                <div class="small-box text-bg-warning">
+                    <div class="inner">
+                        <h3>{{ number_of_users }}</h3>
+                        <p>User Registrations</p>
+                    </div>
+                    <div class="image-section">
+                        {% if user.profile_image %}
+                            <img src="{{ user.profile_image.url }}" alt="{{ user.username }}" class="img-thumbnail" style="width: 100px; height: 100px;">
+                        {% else %}
+                            <img src="{% static 'images/default_profile.png' %}" alt="Default profile image" class="img-thumbnail" style="width: 100px; height: 100px;">
+                        {% endif %}
+                    </div>
+                    <a href="{% url 'admin:website_customuser_changelist' %}" class="small-box-footer link-dark link-underline-opacity-0 link-underline-opacity-50-hover">
+                        More info <i class="bi bi-link-45deg"></i>
+                    </a> 
+                </div>
+                <!--end::Small Box Widget 3-->
+            </div>
+            
+
+            <div class="col-lg-3 col-6">
+                <!--begin::Small Box Widget 4-->
+                <div class="small-box text-bg-danger">
+                    <div class="inner">
+                        <h3>{{ number_of_typetickets }}</h3>
+                        <p>Total Typetickets</p>
+                    </div>
+                    <svg class="small-box-icon" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path clip-rule="evenodd" fill-rule="evenodd" d="M2.25 13.5a8.25 8.25 0 018.25-8.25.75.75 0 01.75.75v6.75H18a.75.75 0 01.75.75 8.25 8.25 0 01-16.5 0z"></path>
+                        <path clip-rule="evenodd" fill-rule="evenodd" d="M12.75 3a.75.75 0 01.75-.75 8.25 8.25 0 018.25 8.25.75.75 0 01-.75.75h-7.5a.75.75 0 01-.75-.75V3z"></path>
+                    </svg>
+                    <a href="{%url 'types'%}" class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover">
+                        More info <i class="bi bi-link-45deg"></i>
+                    </a>
+                </div>
+                <!--end::Small Box Widget 4-->
+            </div>
+            <!--end::Col-->
+        </div>
+        <!--end::Row-->
+    </div>
+    <!--end::Container Fluid-->
+</section>
+
+
+
+
+
+<div class="container" style="width: 100%; height: auto; border: 2px solid #ddd; border-radius: 8px; padding: 20px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);">
+    <h2 style="text-align: center;">Tickets by Type</h2>
+    <canvas id="ticketsPieChart" style="width: 100%; height: 400px;"></canvas>
+</div>
+
+
+
+
+<div class="col-md-6">
+    <!-- USERS LIST -->
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Latest Members</h3>
+            <div class="card-tools">
+                <span class="badge text-bg-danger">8 New Members</span>
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <ul class="users-list clearfix" style="list-style-type: none; padding: 0; display: flex; flex-wrap: wrap; justify-content: space-around;">
+                {% for user in users %}
+                <li style="width: 30%; text-align: center; margin-bottom: 20px;">
+                    <img src="https://ui-avatars.com/api/?name={{ user.username }}&size=80&background=79C8FF&color=fff" 
+                         alt="{{ user.username }}" class="img-circle elevation-2" style="width: 80px; height: 80px;">
+                    <a href="#" class="users-list-name" style="display: block; margin-top: 10px;">{{ user.username }}</a>
+                    <span class="users-list-date" style="font-size: 12px;">{{ user.date_joined|date:"M d, Y" }}</span>
+                </li>
+                {% empty %}
+                <li style="width: 100%; text-align: center;">No users found.</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="card-footer text-center">
+            <a href="{% url 'admin:website_customuser_changelist' %}">View All</a>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+{% endblock %}
+{% block extrajs %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+<script>
+    {% comment %} $(document).ready(function() { {% endcomment %}
+    $(document).ready(function() {
+    $.ajax({
+        url: "{% url 'chart_view' %}",  // Update this URL to your actual view URL
+        method: "GET",
+        success: function(data) {
+            // Create the chart with the fetched data
+            var ctx = document.getElementById('ticketsPieChart').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: 'Percentage of Tickets (%)',
+                        data: data.data,
+                        backgroundColor: data.colors,  // Use dynamic colors
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    scales: {
+                        x: {
+                            stacked: true,
+                            ticks: {
+                                beginAtZero: true,
+                                callback: function(value) {
+                                    return value + "%";
+                                }
+                            }
+                        },
+                        y: {
+                            stacked: true
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(tooltipItem) {
+                                    return tooltipItem.raw + "%";
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    });
+});
+
+
+
+
+       
+    </script>
+
+   
+
+
+
+
+
+{% endblock  %}

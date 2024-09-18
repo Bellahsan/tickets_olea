@@ -5,32 +5,30 @@ from shared.enum import RoleUtilisateur, StatutTicket
 from ticketsolea import settings
 
 
-class User(AbstractUser):
+class CustomUser(AbstractUser):
+  
     role = models.CharField(max_length=50, choices=RoleUtilisateur.choices, default=RoleUtilisateur.ADMIN)
     groups = models.ManyToManyField(Group, related_name='website_users', blank=True, verbose_name='groups')
-    user_permissions = models.ManyToManyField(Permission, related_name='website_users_permissions', blank=True, verbose_name='user permissions')
+    user_permissions = models.ManyToManyField(Permission, related_name='customuser_permissions', blank=True, verbose_name='user permissions')
+    linkedin_url = models.URLField(max_length=50, blank=True, null=True)  # LinkedIn URL field
+    profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True)  # New field for the user profile image
 
     def is_admin(self):
-        return self.role == RoleUtilisateur.ADMIN
+         return self.role == RoleUtilisateur.ADMIN
 
     def is_developer(self):
-        return self.role == RoleUtilisateur.DEVELOPPER
+         return self.role == RoleUtilisateur.DEVELOPPER
 
     def is_client(self):
-        return self.role == RoleUtilisateur.CLIENT
+         return self.role == RoleUtilisateur.CLIENT
 
     def is_directeur(self):
-        return self.role == RoleUtilisateur.DIRECTEUR
+         return self.role == RoleUtilisateur.DIRECTEUR
 
     def is_tester(self):
-        return self.role == RoleUtilisateur.TESTEUR
+         return self.role == RoleUtilisateur.TESTEUR
 
-    def is_expert_user(self):
-        return self.role == RoleUtilisateur.EXPERT_USER
-
-    def is_database_expert(self):
-        return self.role == RoleUtilisateur.DATABASE_EXPERT
-
+   
 
 class TypeTicket(models.Model):
     libelle = models.CharField(max_length=50, blank=True, null=True)
@@ -45,6 +43,9 @@ class TypeTicket(models.Model):
         db_table = 'type_tickets'
         verbose_name = "Type de ticket"
         verbose_name_plural = "Types de tickets"
+        permissions = [
+            ("can_view_typeticket", "Can view type tickets"),
+        ]
 
 
 class Ticket(models.Model):
@@ -66,3 +67,6 @@ class Ticket(models.Model):
         db_table = 'ticket'
         verbose_name = "Ticket"
         verbose_name_plural = "Tickets"
+        permissions = [
+            ("can_view_tickets", "Can view tickets"),
+        ]

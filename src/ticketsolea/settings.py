@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'website',
 ]
 
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -64,7 +65,7 @@ ROOT_URLCONF = 'ticketsolea.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -109,6 +110,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
@@ -132,14 +135,19 @@ PAGE_LANGUAGES = "PAGE_LANGUAGES"
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+
+
 
 MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'website.User'
+AUTH_USER_MODEL = 'website.CustomUser'
 
 # LOGIN DEFAULT REDIRECT URL
 LOGIN_REDIRECT_URL = '/'
@@ -147,7 +155,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # DJANGO JAZZMIN CONFIGURATION
 JAZZMIN_SETTINGS = {
-    "site_title": "",
+    "site_title": "Olea Ticketing System",
     "site_header": "Tickets OLEA",
     "site_brand": "©",
     "site_logo": "admin_custom/img/logo.png",
@@ -162,40 +170,64 @@ JAZZMIN_SETTINGS = {
     "copyright": "TICKETS OLEA",
     "version": "1.0",
     "language_chooser": True,
-    "PAGE_LANGUAGES": LANGUAGE,
+    "PAGE_LANGUAGES": ['en', 'fr'],  # Update with the list of languages you support
     "custom_links": {
         "auth": [
             {
                 "name": "Utilisateurs",
-                "url": "admin:website_user_changelist",
+                "url": "admin:website_CustomUser_changelist",  # Ensure this matches your URL pattern
                 "icon": "fa fa-user",
-                "permissions": ["auth.view_user"]
-            }
+                "permissions": ["auth.view_user"],
+            },
+        #       {
+        #     "name": "Groupes",
+        #     "url": "admin:auth_group_changelist",
+        #     "icon": "fa fa-users",
+        #     "permissions": ["auth.view_group"],
+        # }
         ],
         "website": [
             {
+                "name": "Tickets",
+                "url": "tickets_page",  # Ensure this matches your URL pattern
+                "icon": "fas fa-ticket-alt",
+                "permissions": ["website.view_ticket"],
+
+            },
+            {
                 "name": "Tableau de Bord",
-                "url": "index",
+                "url": "index",  # Ensure this matches your URL pattern
                 "icon": "fas fa-home",
             },
             {
-                "name": "Tickets",
-                "url": "tickets",
-                "icon": "fas fa-ticket-alt",
-                "permissions": ["website.can_view_tickets"]
+                "name": "Types Tickets",
+                "url": "types",  # Ensure this matches your URL pattern
+                "icon": "fa fa-credit-card",
+                "permissions": ["website.can_view_typeticket"],
+
             },
             {
-                "name": "Types Tickets",
-                "url": "types",
-                "icon": "fa fa-credit-card",
-                "permissions": ["website.can_view_types_tickets"]
+                "name": "Dashboard & Statistics",
+                "url": "statistics",  # Ensure this matches your URL pattern
+                "icon": "fa fa-tachometer-alt",
+            },
+  
+            {
+                "name": "About Us",
+                "url": "about_us",  # Ensure this matches your URL pattern
+                "icon": "fas fa-file-alt",
+            },
+            {
+                "name": "Contact",
+                "url": "contact",  # Ensure this matches your URL pattern
+                "icon": "fas fa-file-alt",
             },
         ],
     },
     "hide_models": [
         'website.ticket',
         'website.typeticket',
-        'website.user',
+        'website.customuser',  # Ensure this matches your model name
     ],
     "icons": {
         "auth": "fas fa-user-shield",
@@ -213,12 +245,107 @@ JAZZMIN_SETTINGS = {
     "default_icon_children": "fas fa-circle",
 }
 
+# JAZZMIN_SETTINGS = {
+#     "site_title": "Olea Ticketing System",
+#     "site_header": "Tickets OLEA",
+#     "site_brand": "©",
+#     "site_logo": "admin_custom/img/logo.png",
+#     "site_logo_classes": "container",
+#     "custom_css": "admin_custom/css/custom.css",
+#     "order_with_respect_to": [
+#         'auth',
+#         'website',
+#     ],
+#     "related_modal_active": True,
+#     "navigation_expanded": True,
+#     "copyright": "TICKETS OLEA",
+#     "version": "1.0",
+#     "language_chooser": True,
+#     "PAGE_LANGUAGES": LANGUAGE,
+#     "custom_links": {
+#         "auth": [
+#             {
+#                 "name": "Utilisateurs",
+#                 "url":"admin:website_user_changelist",
+#                 "icon": "fa fa-user",
+#                 "permissions": ["auth.view_user"]
+                
+                
+#             }
+#         ],
+#         "website": [
+#                  {
+#                  "name": "Tickets",
+#                  "url": "tickets_page",
+#                  "icon": "fas fa-ticket-alt",
+#              },
+#             {
+#                 "name": "Tableau de Bord",
+#                 "url": "index",
+#                 "icon": "fas fa-home",
+#             },
+        
+#             {
+#                 "name": "Types Tickets",
+#                 "url": "types",
+#                 "icon": "fa fa-credit-card",
+#             },
+#          {
+#                "name": "Dashboard&Statistics",
+#                "url": "statistics",
+#                "icon": "fa fa-tachometer-alt",
+#          },    
+#          {
+#                 "name": "Rapports",
+#                 "url": "reports",
+#                 "icon": "fas fa-file-alt",
+#                 },
+         
+      
+#           {
+#                 "name": "about_us",
+#                 "url": "about_us",
+#                 "icon": "fas fa-file-alt",
+#                 },
+          
+#                 {
+#                 "name": "contact",
+#                 "url": "contact",
+#                 "icon": "fas fa-file-alt",
+#                 },
+          
+         
+ 
+#         ],
+#     },
+#     "hide_models": [
+#         'website.ticket',
+#         'website.typeticket',
+#         'website.user',
+#     ],
+#     "icons": {
+#         "auth": "fas fa-user-shield",
+#         "auth.Group": "fas fa-users",
+#         "website": "fas fa-box",
+#     },
+#     "change_view": {
+#         "auth": {
+#             "user": {
+#                 "password": "Change Password",
+#             }
+#         }
+#     },
+#     "default_icon_parents": "fas fa-chevron-circle-right",
+#     "default_icon_children": "fas fa-circle",
+# }
+
 # EMAIL SETTINGS
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = ''
+EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
+EMAIL_HOST_USER = 'azizfadhlaoui2k23@gmail.com'
+EMAIL_HOST_PASSWORD = 'tfgj okan pfgd hdlw'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 EMAIL_USE_TLS = True
 EMAIL_HOST_NAME = 'Noreply TICKETS OLEA'
+ALLOWED_HOSTS = []

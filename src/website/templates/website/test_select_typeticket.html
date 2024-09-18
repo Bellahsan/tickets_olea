@@ -1,0 +1,23 @@
+{% extends "admin/base_site.html" %}
+
+{% block title %}Select Type Tickets{% endblock %}
+
+{% block content %}
+    <h1>Select Type Tickets</h1>
+    <form id="select_type_form" method="post" action="{% url 'test_select_typeticket' %}">
+        {% csrf_token %}
+        
+        <div>
+            {% for type in types %}
+                <div>
+                    <input type="checkbox" id="type_{{ type.id }}" name="type_tickets" value="{{ type.id }}">
+                    <label for="type_{{ type.id }}">{{ type.libelle }}</label>
+                </div>
+            {% empty %}
+                <p>No types available</p>
+            {% endfor %}
+        </div>
+
+        <button type="submit">Submit</button>
+    </form>
+{% endblock %}
