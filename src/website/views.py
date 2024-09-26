@@ -27,8 +27,7 @@ def index(request):
     return render(request, 'website/index.html', context)
 
 
-class TicketsView(PermissionRequiredMixin, TemplateView):
-    permission_required = "webiste.can_view_tickets"
+class TicketsView(TemplateView):
     template_name = 'website/tickets.html'
     model = Ticket
 

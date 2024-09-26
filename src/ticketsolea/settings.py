@@ -64,7 +64,8 @@ ROOT_URLCONF = 'ticketsolea.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        #   'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [BASE_DIR / 'templates', BASE_DIR / 'admin_custom' / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -211,6 +212,9 @@ JAZZMIN_SETTINGS = {
     },
     "default_icon_parents": "fas fa-chevron-circle-right",
     "default_icon_children": "fas fa-circle",
+    "custom_js": "admin_custom/js/custom_js.js",
+    "copyright": "OLEA TICKETS",
+    "version": "1.0",
 }
 
 # EMAIL SETTINGS

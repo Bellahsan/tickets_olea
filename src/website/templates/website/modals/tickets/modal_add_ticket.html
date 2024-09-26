@@ -1,0 +1,45 @@
+{% load my_filters %}
+
+<div  class="modal fade"  id="add_modal_ticket" data-backdrop="static" data-keyboard="false" aria-hidden="true"  style="display: none">
+	<div class="modal-dialog modal-xl">
+		<div class="modal-content">
+			<form enctype="multipart/form-data" id="form_add_ticket" action="{% url 'add_ticket' %}" method="post">
+			{% csrf_token %}
+
+			<div class="modal-header">
+				<h4 class="modal-title">CRÉATION D'UNE TICKET</h4>
+				<button type="button" class="close"data-dismiss="modal"aria-label="Close">
+					<span aria-hidden="true">×</span>
+				</button>
+			</div>
+
+            <div class="modal-body">
+				
+                <div class="alert  alert-dismissible fade show hidden" role="alert">
+				  <span class="message">TRAITEMENT EN COURS</span>
+				</div>
+
+				<div class="col-md-12 offset-0">
+                        
+                        <!--
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item"><a class="nav-link active" id="acte-tab" data-toggle="tab" href="#acte" role="tab" aria-controls="acte" aria-selected="true">GÉNÉRAL</a></li>
+                            <li class="nav-item"><a class="nav-link" id="settings-tab" data-toggle="tab" href="#settings" role="tab" aria-controls="settings" aria-selected="false">PARAMÉTRAGE DE L'ACTE</a></li>
+                            <li class="nav-item"><a class="nav-link" id="tarif-tab" data-toggle="tab" href="#tarif" role="tab" aria-controls="tarif" aria-selected="false">TARIF</a></li>
+                        </ul>
+                        -->
+
+                        <div class="tab-content" id="myTabContent">
+                            <strong>contenu ici</strong>
+                        </div>
+
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Retour</button>
+                        <button type="button" id="btn_save_ticket" class="btn o-bg-primary">Valider</button>
+                    </div>
+
+                </div>
+			</form>
+		</div>
+	</div>
+</div>

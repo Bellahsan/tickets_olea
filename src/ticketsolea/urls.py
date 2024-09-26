@@ -20,6 +20,7 @@ from django.contrib import admin
 from django.urls import path, include
 from website import views
 
+from admin_custom.admin import custom_admin_site
 
 customUrl = []
 customUrl += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
@@ -31,5 +32,6 @@ urlpatterns = customUrl + [
     path('accounts/profile/', views.redirecttohome),
     path('accounts/login/', views.redirecttohome),
     #
-    path("", admin.site.urls),
+    path("", custom_admin_site.urls),
+    #   path("", admin.site.urls),
 ]
